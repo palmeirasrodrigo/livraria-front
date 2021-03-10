@@ -1,14 +1,14 @@
 import { Component, OnInit } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
-import { Categoria } from "src/app/components/views/categoria/categoria.model";
-import { CategoriaService } from "src/app/components/views/categoria/categoria.service";
+import { Categoria } from "../categoria.model";
+import { CategoriaService } from "../categoria.service";
 
 @Component({
-  selector: "app-categoria-delete",
-  templateUrl: "./categoria-delete.component.html",
-  styleUrls: ["./categoria-delete.component.css"],
+  selector: "app-categoria-update",
+  templateUrl: "./categoria-update.component.html",
+  styleUrls: ["./categoria-update.component.css"],
 })
-export class CategoriaDeleteComponent implements OnInit {
+export class CategoriaUpdateComponent implements OnInit {
   categoria: Categoria = {
     id: "",
     nome: "",
@@ -32,15 +32,16 @@ export class CategoriaDeleteComponent implements OnInit {
     });
   }
 
-  delete(): void {
-    this.service.delete(this.categoria.id!).subscribe(
+  update(): void {
+    this.service.update(this.categoria).subscribe(
       (resposta) => {
         this.router.navigate(["categorias"]);
-        this.service.mensagem("Categoria deletada com sucesso!");
+        this.service.mensagem("Categoria atualizada com sucesso!");
       },
       (err) => {
-        console.log(err);
-        this.service.mensagem(err.error.error);
+        for (let i = 0; i < err.error.errors.length; i++) {
+          this.service.mensagem(err.error.errors[i].message);
+        }
       }
     );
   }
